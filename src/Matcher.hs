@@ -15,18 +15,21 @@ type ID = Text
 type ResourceType = Text
 type ActionType = Text
 
-data RMatcher = RSpecific ResourceType ID
-              | RAny ResourceType
-              | RWildcard
+-- | Resource matchers
+data RMatcher = RSpecific ResourceType ID -- ^ match a specified resource (e.g. "org/42")
+              | RAny ResourceType         -- ^ match an unspecified resource (e.g. "org/*")
+              | RWildcard                 -- ^ match a wildcard resource ("*")
   deriving (Eq, Show)
 
-data AMatcher = ASpecific ActionType
-              | AWildcard
+-- | Action matchers
+data AMatcher = ASpecific ActionType -- ^ match a specified action (e.g. "write")
+              | AWildcard            -- ^ match a wildcard action ("*")
   deriving (Eq, Show)
 
+-- | A linear hierarchy of matchable things
 data Hierarchy a = (Matchable a) => Node { matcher :: a
                                          , child   :: Maybe (Hierarchy a) }
-                 | EndNode
+                 | EndNode -- ^ used to terminate folds
 
 instance (Eq a) => Eq (Hierarchy a) where
   EndNode == EndNode = True
@@ -38,6 +41,9 @@ instance (Show a) => Show (Hierarchy a) where
   show (Node x y) = "Node (" ++ show x ++ "; " ++ show y ++ ")"
 
 class Matchable a where
+  -- | matches is a non-commutative, fuzzy equality in that the order of
+  -- the arguments should matter. This is because more general matchers
+  -- should match more specific ones, but not vice versa.
   matches :: a -> a -> Bool
 
 instance (Matchable a) => Matchable (Hierarchy a) where
