@@ -35,6 +35,13 @@ spec = do
                           (Just (Node (ASpecific "create")
                                       Nothing)))))
 
+  describe "pSpecificAction" $ do
+    it "only parses fully-specified actions" $ do
+      shouldParse
+        (parse pSpecificAction "" "org:write")
+        (Node (ASpecific "org") (Just (Node (ASpecific "write") Nothing)))
+      parse pSpecificAction "" `shouldFailOn` "org:*"
+
   describe "pResource" $ do
     it "parses a single resource with specifiers and wildcards" $ do
       shouldParse
@@ -53,3 +60,12 @@ spec = do
         (Node (RSpecific "org" "42")
               (Just (Node (RAny "user")
                           (Just (Node RWildcard Nothing)))))
+
+  describe "pSpecificResource" $ do
+    it "parses only fully-specified resources" $ do
+      shouldParse
+        (parse pSpecificResource "" "org/42:user/27")
+        (Node (RSpecific "org" "42")
+              (Just (Node (RSpecific "user" "27") Nothing)))
+      parse pSpecificResource "" `shouldFailOn` "org/42:*"
+      parse pSpecificResource "" `shouldFailOn` "org/42:user/*"

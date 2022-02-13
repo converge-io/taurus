@@ -2,7 +2,9 @@
 
 module Parser (
   pAction
+, pSpecificAction
 , pResource
+, pSpecificResource
 ) where
 
 import Matcher (Matchable, AMatcher (..), RMatcher (..), Hierarchy (..))
@@ -41,7 +43,13 @@ pAction :: Parser (Hierarchy AMatcher)
 pAction = parser $  ASpecific <$> pName
                 <|> AWildcard <$  wld
 
+pSpecificAction :: Parser (Hierarchy AMatcher)
+pSpecificAction = parser $ ASpecific <$> pName
+
 pResource :: Parser (Hierarchy RMatcher)
 pResource = parser $  try (uncurry RSpecific <$> pSpecific)
                   <|> RAny <$> pAny
                   <|> RWildcard <$ wld
+
+pSpecificResource :: Parser (Hierarchy RMatcher)
+pSpecificResource = parser $ uncurry RSpecific <$> pSpecific
