@@ -18,19 +18,33 @@ type ActionType = Text
 data RMatcher = RSpecific ResourceType ID
               | RAny ResourceType
               | RWildcard
+  deriving (Eq, Show)
 
 data AMatcher = ASpecific ActionType
               | AWildcard
+  deriving (Eq, Show)
 
 data Hierarchy a = (Matchable a) => Node { matcher :: a
                                          , child   :: Maybe (Hierarchy a) }
+                 | EndNode
+
+instance (Eq a) => Eq (Hierarchy a) where
+  EndNode == EndNode = True
+  Node x1 y1 == Node x2 y2 = x1 == x2 && y1 == y2
+  _ == _ = False
+
+instance (Show a) => Show (Hierarchy a) where
+  show EndNode = "EndNode"
+  show (Node x y) = "Node (" ++ show x ++ "; " ++ show y ++ ")"
 
 class Matchable a where
   matches :: a -> a -> Bool
 
 instance (Matchable a) => Matchable (Hierarchy a) where
-  matches a b = matcher a `matches` matcher b
-                && child a `matches` child b
+  matches EndNode EndNode = True
+  matches (Node x1 y1) (Node x2 y2) = x1 `matches` x2
+                                    && y1 `matches` y2
+  matches _ _ = False
 
 instance (Matchable a) => Matchable (Maybe a) where
   matches Nothing Nothing = True

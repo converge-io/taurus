@@ -23,6 +23,7 @@ dependencies:
 - text
 - hspec
 - megaparsec
+- hspec-megaparsec
 
 library:
   source-dirs: src
@@ -49,3 +50,4 @@ tests:
     dependencies:
     - auth-resolver
     - hspec
+    - hspec-megaparsec
