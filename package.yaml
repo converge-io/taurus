@@ -20,10 +20,19 @@ description:         Please see the README on GitHub at <https://github.com/gfar
 
 dependencies:
 - base >= 4.7 && < 5
-- text
+- bytestring
+- either
+- errors-ext
+- hasql
+- hasql-th
 - hspec
-- megaparsec
 - hspec-megaparsec
+- megaparsec
+- profunctors
+- text
+- transformers
+- vector
+- aeson
 
 library:
   source-dirs: src
