@@ -36,8 +36,7 @@ parser p = foldr makeHierarchy EndNode <$> parseMatchers p
         parseMatchers p = (:) <$> p <*> many (sep *> p)
 
         makeHierarchy :: (Matchable a) => a -> Hierarchy a -> Hierarchy a
-        makeHierarchy x EndNode = Node { matcher=x, child=Nothing }
-        makeHierarchy x c       = Node { matcher=x, child=Just c }
+        makeHierarchy x c = Node { matcher=x, child=c }
 
 pAction :: Parser (Hierarchy AMatcher)
 pAction = parser $  ASpecific <$> pName

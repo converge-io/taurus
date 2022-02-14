@@ -64,23 +64,23 @@ spec = do
 
   describe "Hierarchy" $ do
     it "can match hierarchies where no children exist" $ do
-      let a = Node (RAny "org") Nothing
-          b = Node (RSpecific "org" "42") Nothing
-          c = Node RWildcard Nothing
+      let a = Node (RAny "org") EndNode
+          b = Node (RSpecific "org" "42") EndNode
+          c = Node RWildcard EndNode
       a `matches` b `shouldBe` True
       a `matches` c `shouldBe` False
 
     it "can match nested hierarchies" $ do
       let a = Node { matcher=RSpecific "org" "42"
-                   , child=Just (Node { matcher=RAny "user"
-                                      , child=Just (Node { matcher=RWildcard
-                                                         , child=Nothing })}) }
+                   , child=Node { matcher=RAny "user"
+                                , child=Node { matcher=RWildcard
+                                             , child=EndNode }}}
           b = Node { matcher=RSpecific "org" "42"
-                   , child=Just (Node { matcher=RSpecific "user" "27"
-                                      , child=Just (Node { matcher=RAny "contact"
-                                                         , child=Nothing })}) }
+                   , child=Node { matcher=RSpecific "user" "27"
+                                , child=Node { matcher=RAny "contact"
+                                             , child=EndNode }}}
           c = Node { matcher=RSpecific "org" "42"
-                   , child=Just (Node { matcher=RAny "user"
-                                      , child=Nothing }) }
+                   , child=Node { matcher=RAny "user"
+                                , child=EndNode }}
       a `matches` b `shouldBe` True
       a `matches` c `shouldBe` False

@@ -28,7 +28,7 @@ data AMatcher = ASpecific ActionType -- ^ match a specified action (e.g. "write"
 
 -- | A linear hierarchy of matchable things
 data Hierarchy a = (Matchable a) => Node { matcher :: a
-                                         , child   :: Maybe (Hierarchy a) }
+                                         , child   :: Hierarchy a }
                  | EndNode -- ^ used to terminate folds
 
 instance (Eq a) => Eq (Hierarchy a) where
@@ -50,12 +50,6 @@ instance (Matchable a) => Matchable (Hierarchy a) where
   matches EndNode EndNode = True
   matches (Node x1 y1) (Node x2 y2) = x1 `matches` x2
                                     && y1 `matches` y2
-  matches _ _ = False
-
-instance (Matchable a) => Matchable (Maybe a) where
-  matches Nothing Nothing = True
-  matches (Just _) Nothing = False
-  matches (Just x) (Just y) = x `matches` y
   matches _ _ = False
 
 instance Matchable RMatcher where
