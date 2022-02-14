@@ -24,6 +24,7 @@ source-repository head
 
 library
   exposed-modules:
+      Auth
       Matcher
       Parser
       Policy
@@ -80,6 +81,7 @@ test-suite auth-resolver-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      AuthSpec
       MatcherSpec
       ParserSpec
       Paths_auth_resolver
