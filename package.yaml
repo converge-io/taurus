@@ -1,10 +1,10 @@
-name:                auth-resolver
+name:                taurus
 version:             0.1.0.0
-github:              "gfarrell/auth-resolver"
+github:              "converge-io/taurus"
 license:             BSD3
 author:              "Gideon Farrell"
-maintainer:          "gideon@gtf.io"
-copyright:           "2022 Gideon Farrell"
+maintainer:          "gideon@converge.io"
+copyright:           "2022 Converge"
 
 extra-source-files:
 - README.md
@@ -16,10 +16,11 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/gfarrell/auth-resolver#readme>
+description:         Please see the README on GitHub at <https://github.com/converge-io/taurus#readme>
 
 dependencies:
 - base >= 4.7 && < 5
+- aeson
 - bytestring
 - either
 - errors-ext
@@ -32,13 +33,12 @@ dependencies:
 - text
 - transformers
 - vector
-- aeson
 
 library:
   source-dirs: src
 
 executables:
-  auth-resolver-exe:
+  taurus:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -46,10 +46,10 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - auth-resolver
+    - taurus
 
 tests:
-  auth-resolver-test:
+  taurus-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -57,6 +57,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - auth-resolver
+    - taurus
     - hspec
     - hspec-megaparsec
