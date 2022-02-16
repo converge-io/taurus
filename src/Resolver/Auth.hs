@@ -1,10 +1,10 @@
-module Auth (
+module Resolver.Auth (
   authorised
 ) where
 
-import Matcher (Matchable (matches))
-import qualified Policy as P
-import qualified Request as R
+import Resolver.Matcher (Matchable (matches))
+import qualified Resolver.Policy as P
+import qualified Resolver.Request as R
 
 -- | Checks if a policy matches against a given request. Only checks the
 -- action and resource, not the role.

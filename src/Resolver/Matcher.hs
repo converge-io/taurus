@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs #-}
 
-module Matcher (
-  ID
+module Resolver.Matcher (
+  ResourceID
 , ResourceType
 , RMatcher (..)
 , AMatcher (..)
@@ -10,15 +10,12 @@ module Matcher (
 ) where
 
 import Data.Text (Text)
-
-type ID = Text
-type ResourceType = Text
-type ActionType = Text
+import Resolver.Types (ResourceID, ResourceType, ActionType)
 
 -- | Resource matchers
-data RMatcher = RSpecific ResourceType ID -- ^ match a specified resource (e.g. "org/42")
-              | RAny ResourceType         -- ^ match an unspecified resource (e.g. "org/*")
-              | RWildcard                 -- ^ match a wildcard resource ("*")
+data RMatcher = RSpecific ResourceType ResourceID -- ^ match a specified resource (e.g. "org/42")
+              | RAny ResourceType                 -- ^ match an unspecified resource (e.g. "org/*")
+              | RWildcard                         -- ^ match a wildcard resource ("*")
   deriving (Eq, Show)
 
 -- | Action matchers

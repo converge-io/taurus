@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module AuthSpec (spec) where
+module Resolver.AuthSpec (spec) where
 
 import Test.Hspec
-import Auth
-import Matcher (AMatcher (..), RMatcher (..), Hierarchy (..))
-import qualified Request as R
-import qualified Policy as P
+import Resolver.Auth
+import Resolver.Matcher (AMatcher (..), RMatcher (..), Hierarchy (..))
+import qualified Resolver.Request as R
+import qualified Resolver.Policy as P
 import Data.Text
 
 spec :: Spec

@@ -4,8 +4,9 @@ module Source.Policy (
   getPoliciesForRoles
 ) where
 
-import Policy (Policy (..), RoleID)
-import Parser (pAction, pResource)
+import Resolver.Types (RoleID)
+import Resolver.Policy (Policy (..))
+import Resolver.Parser (pAction, pResource)
 import Text.Megaparsec (runParser)
 import Text.Megaparsec.Error (ParseErrorBundle)
 import Hasql.Statement

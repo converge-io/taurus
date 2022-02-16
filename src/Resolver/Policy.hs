@@ -1,10 +1,9 @@
-module Policy (
+module Resolver.Policy (
   Policy (..)
-, RoleID
 ) where
 
-import Types (RoleID)
-import Matcher (AMatcher, RMatcher, Hierarchy)
+import Resolver.Types (RoleID)
+import Resolver.Matcher (AMatcher, RMatcher, Hierarchy)
 
 data Policy = Policy { roleId   :: RoleID
                      , action   :: Hierarchy AMatcher

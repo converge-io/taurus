@@ -1,9 +1,9 @@
-module Request (
+module Resolver.Request (
   Request (..)
 ) where
 
-import Types (RoleID)
-import Matcher (AMatcher, RMatcher, Hierarchy)
+import Resolver.Types (RoleID)
+import Resolver.Matcher (AMatcher, RMatcher, Hierarchy)
 
 data Request = Request { roles :: [RoleID]
                        , action :: Hierarchy AMatcher

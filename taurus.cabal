@@ -24,13 +24,13 @@ source-repository head
 
 library
   exposed-modules:
-      Auth
-      Matcher
-      Parser
-      Policy
-      Request
+      Resolver.Auth
+      Resolver.Matcher
+      Resolver.Parser
+      Resolver.Policy
+      Resolver.Request
+      Resolver.Types
       Source.Policy
-      Types
   other-modules:
       Paths_taurus
   hs-source-dirs:
@@ -81,9 +81,9 @@ test-suite taurus-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      AuthSpec
-      MatcherSpec
-      ParserSpec
+      Resolver.AuthSpec
+      Resolver.MatcherSpec
+      Resolver.ParserSpec
       Paths_taurus
   hs-source-dirs:
       test

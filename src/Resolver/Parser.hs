@@ -1,13 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Parser (
+module Resolver.Parser (
   pAction
 , pSpecificAction
 , pResource
 , pSpecificResource
 ) where
 
-import Matcher (Matchable, AMatcher (..), RMatcher (..), Hierarchy (..))
+import Resolver.Matcher (Matchable, AMatcher (..), RMatcher (..), Hierarchy (..))
 import Control.Applicative hiding (many, some)
 import Control.Monad
 import Data.Text (Text, pack)

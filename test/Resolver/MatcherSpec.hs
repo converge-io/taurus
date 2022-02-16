@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module MatcherSpec (spec) where
+module Resolver.MatcherSpec (spec) where
 
 import Test.Hspec
-import Matcher
+import Resolver.Matcher
 import Data.Text
 
 spec :: Spec

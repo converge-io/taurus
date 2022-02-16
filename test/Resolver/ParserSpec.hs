@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module ParserSpec (spec) where
+module Resolver.ParserSpec (spec) where
 
 import Test.Hspec
 import Test.Hspec.Megaparsec
 import Text.Megaparsec
-import Parser
-import Matcher (AMatcher (..), RMatcher (..), Hierarchy (..))
+import Resolver.Parser
+import Resolver.Matcher (AMatcher (..), RMatcher (..), Hierarchy (..))
 
 spec :: Spec
 spec = do
