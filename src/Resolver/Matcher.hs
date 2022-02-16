@@ -1,11 +1,16 @@
 {-# LANGUAGE GADTs #-}
 
 module Resolver.Matcher (
-  ResourceID
-, ResourceType
+-- * Basic types to represent match objects
+  Action
+, Resource
+
+-- * Matchers
 , RMatcher (..)
 , AMatcher (..)
 , Hierarchy (..)
+
+-- * Typeclasses
 , Matchable (..)
 ) where
 
@@ -27,6 +32,12 @@ data AMatcher = ASpecific ActionType -- ^ match a specified action (e.g. "write"
 data Hierarchy a = (Matchable a) => Node { matcher :: a
                                          , child   :: Hierarchy a }
                  | EndNode -- ^ used to terminate folds
+
+-- | Shorthand for Hierarchy AMatcher
+type Action = Hierarchy AMatcher
+
+-- | Shorthand for Hierarchy RMatcher
+type Resource = Hierarchy RMatcher
 
 instance (Eq a) => Eq (Hierarchy a) where
   EndNode == EndNode = True

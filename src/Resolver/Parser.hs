@@ -1,13 +1,23 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Resolver.Parser (
+-- * Parsing Actions
   pAction
 , pSpecificAction
+
+-- * Parsing Resources
 , pResource
 , pSpecificResource
 ) where
 
-import Resolver.Matcher (Matchable, AMatcher (..), RMatcher (..), Hierarchy (..))
+import Resolver.Matcher (
+    Matchable
+  , Action
+  , Resource
+  , AMatcher (..)
+  , RMatcher (..)
+  , Hierarchy (..)
+  )
 import Control.Applicative hiding (many, some)
 import Control.Monad
 import Data.Text (Text, pack)
@@ -38,17 +48,21 @@ parser p = foldr makeHierarchy EndNode <$> parseMatchers p
         makeHierarchy :: (Matchable a) => a -> Hierarchy a -> Hierarchy a
         makeHierarchy x c = Node { matcher=x, child=c }
 
-pAction :: Parser (Hierarchy AMatcher)
+-- | Parses an Action hierarchy out of a string
+pAction :: Parser Action
 pAction = parser $  ASpecific <$> pName
                 <|> AWildcard <$  wld
 
-pSpecificAction :: Parser (Hierarchy AMatcher)
+-- | Parses a specific Action hierarchy (i.e. no wildcards)
+pSpecificAction :: Parser Action
 pSpecificAction = parser $ ASpecific <$> pName
 
-pResource :: Parser (Hierarchy RMatcher)
+-- | Parses a Resource hierarchy out of a string
+pResource :: Parser Resource
 pResource = parser $  try (uncurry RSpecific <$> pSpecific)
                   <|> RAny <$> pAny
                   <|> RWildcard <$ wld
 
-pSpecificResource :: Parser (Hierarchy RMatcher)
+-- | Parses a specific Resource hierarchy (i.e. no wildcards allows)
+pSpecificResource :: Parser Resource
 pSpecificResource = parser $ uncurry RSpecific <$> pSpecific

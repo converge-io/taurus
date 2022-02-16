@@ -11,7 +11,7 @@ import Data.Text
 
 spec :: Spec
 spec = do
-  describe "Auth.authorise" $
+  describe "authorise" $
     it "returns True if any Policy in a list matches the given request" $ do
       let r = R.Request { R.roles = [42]
                         , R.action = Node (ASpecific "org") (Node (ASpecific "CreateUser") EndNode)
