@@ -24,6 +24,10 @@ source-repository head
 
 library
   exposed-modules:
+      Http.Decoders
+      Http.Encoders
+      Http.Server
+      Http.Types
       Resolver.Auth
       Resolver.Matcher
       Resolver.Parser
@@ -45,11 +49,15 @@ library
     , hasql-th
     , hspec
     , hspec-megaparsec
+    , http-api-data
     , megaparsec
     , profunctors
+    , servant-server
     , text
     , transformers
     , vector
+    , wai
+    , warp
   default-language: Haskell2010
 
 executable taurus
@@ -69,12 +77,16 @@ executable taurus
     , hasql-th
     , hspec
     , hspec-megaparsec
+    , http-api-data
     , megaparsec
     , profunctors
+    , servant-server
     , taurus
     , text
     , transformers
     , vector
+    , wai
+    , warp
   default-language: Haskell2010
 
 test-suite taurus-test
@@ -98,10 +110,14 @@ test-suite taurus-test
     , hasql-th
     , hspec
     , hspec-megaparsec
+    , http-api-data
     , megaparsec
     , profunctors
+    , servant-server
     , taurus
     , text
     , transformers
     , vector
+    , wai
+    , warp
   default-language: Haskell2010

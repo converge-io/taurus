@@ -1,5 +1,6 @@
 module Resolver.Types (
   RoleID
+, ActorID
 , ResourceID
 , ResourceType
 , ActionType
@@ -8,6 +9,7 @@ module Resolver.Types (
 import Data.Text (Text)
 
 type RoleID = Integer
+type ActorID = Integer
 type ResourceID = Text
 type ResourceType = Text
 type ActionType = Text
