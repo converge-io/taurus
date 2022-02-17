@@ -18,14 +18,9 @@ import Data.Vector (Vector, toList, fromList)
 import Data.Text (Text)
 import Data.Int (Int32)
 import Data.Either.Combinators
-import Error
 
 newtype PolicyParsingError = PolicyParsingError Text
   deriving (Show)
-
-instance ToProgrammeError PolicyParsingError where
-  toProgrammeError (PolicyParsingError s) =
-    SourceQueryError $ "Unable to parse policy: " <> s
 
 makePolicy :: (Int32, Text, Text) -> Either PolicyParsingError Policy
 makePolicy (_roleId, _action, _resource) =
