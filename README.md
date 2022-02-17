@@ -65,7 +65,16 @@ have the following minimal schema:
 
 ### Configuration
 
-TODO
+Taurus is configured via environment variables as follows:
+
+* `TAURUS_SOURCE_ADDR`: the address of the PostgreSQL server.
+* `TAURUS_SOURCE_PORT`: the port of the PostgreSQL server.
+* `TAURUS_SOURCE_USER`: the PostgreSQL user.
+* `TAURUS_SOURCE_PASS`: the PostgreSQL user's password.
+* `TAURUS_SOURCE_DB`: the PostgreSQL database to use.
+
+If running locally, the `./local-postgresql.sh` script will output the
+correct environment variables after spinning up a local instance.
 
 ### Interacting over HTTP
 

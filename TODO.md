@@ -5,5 +5,6 @@
 - [x] Policy backend using postgresql
 - [x] Build request datatype
 - [x] Create HTTP server for daemon mode
+- [x] Support environment configuration
 - [ ] Generalise actors so that requests can contain them rather than the application having to look up the roles
 - [ ] Add support for policy admin (CRUD on policies and roles)
