@@ -2,6 +2,7 @@
 
 module Source.Policy (
   getPoliciesForRoles
+, PolicyParsingError (..)
 ) where
 
 import Resolver.Types (RoleID)

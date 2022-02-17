@@ -46,12 +46,15 @@ library
     , either
     , errors-ext
     , hasql
+    , hasql-pool
     , hasql-th
     , hspec
     , hspec-megaparsec
     , http-api-data
     , megaparsec
+    , mtl
     , profunctors
+    , resource-pool
     , servant-server
     , text
     , transformers
@@ -74,12 +77,15 @@ executable taurus
     , either
     , errors-ext
     , hasql
+    , hasql-pool
     , hasql-th
     , hspec
     , hspec-megaparsec
     , http-api-data
     , megaparsec
+    , mtl
     , profunctors
+    , resource-pool
     , servant-server
     , taurus
     , text
@@ -107,12 +113,15 @@ test-suite taurus-test
     , either
     , errors-ext
     , hasql
+    , hasql-pool
     , hasql-th
     , hspec
     , hspec-megaparsec
     , http-api-data
     , megaparsec
+    , mtl
     , profunctors
+    , resource-pool
     , servant-server
     , taurus
     , text
