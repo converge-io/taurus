@@ -8,6 +8,9 @@ module Resolver.Parser (
 -- * Parsing Resources
 , pResource
 , pSpecificResource
+
+-- * Helper Types
+, Parser
 ) where
 
 import Resolver.Matcher (

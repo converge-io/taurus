@@ -26,13 +26,6 @@ type AuthRequestAPI = "request" :> Capture "roleId" RoleID
                                 :> Capture "resource" Resource
                                 :> Get '[PlainText, JSON] AuthResponse
 
-authRespond id action resource = do
-  liftIO . putStrLn $ "Incoming request: "
-                     <> show id ++ " wants to "
-                     <> show action ++ " on "
-                     <> show resource
-  return Allow
-
 server :: Pool -> Server AuthRequestAPI
 server cs = authRespond
   where authRespond :: RoleID -> Action -> Resource -> Handler AuthResponse

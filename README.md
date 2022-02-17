@@ -1,87 +1,102 @@
 # Taurus
 
-This is an experimental authorisation resolver package which takes
-auth policies of the form `(subject, verb, object)` and a request of a
-similar form, and returns a boolean `accept` or `deny` status.
-
-## Roles and Actors
-
-This resolver is based on RBAC (role-based access control) and, as such,
-any actor wishing to gain permission must have a set of roles defined
-for it. Since the types of actors and the storage used to get them can
-vary from application to application, the resolver expects to receive a
-list of roles rather than a specific actor as part of the request.
+Taurus is an experimental resolver for RBAC-based permissions systems.
+It operates on a table of `policies` and checks incoming authorisation
+requests against known policies in that table.
 
 ## Policies and Requests
 
-Policies are of the form `(subject, verb, object)`, but more
-specifically `(role, action, resource)`. These are a set of rules which
-state that a given role has permission to perform some action on some
-resource, where both the action and resource are composed of `matchers`.
-These allow for things like wildcards and also specifiers. For example,
-the following policy would mean that the role `org-user` has data
-reading permissions on the specific organisation with ID `42`.
+Policies are essentially tuples containing the id of the role which this
+policy concerns, the action the role is permitted to perform, and the
+resource on which that action may be performed:
 
-    (org-user, data:read, org/42)
+    (role, action, resource)
 
-Wildcards make it possible to have a bit more flexibility. For example,
-the following policy would mean that the role `org-admin` has `create`
-permission on all users within the org `42`:
+Taurus specifies actions and resources with the same syntax: parts
+are separated with `:`, and wildcards (`*`) can match any part.
+Additionally, because resources often need to be specified (e.g. you
+may want to give permission to a specific `project`, not just any
+`project`), resources have the specification syntax which looks like
+`type/id`. For example, the following policy asserts that the role with
+ID `42` has access to configure projects for all projects within the
+organisation with ID `27`:
 
-    (org-admin, user:create, org/42:user/*)
+    (42, project:configure, org/27:project/*)
 
-Wildcards can also be used in actions as well as resources. This policy
-would mean that the `superuser` role has all `org` permissions within
-the organisation `42`:
+Taurus has no semantic understanding of the structure of actions or
+resources, it just knows how to match these strings together.
 
-    (superuser, org:*, org/42)
+Authorisation requests are similar to policies, except that wildcards
+are not permitted: everything has to be specified. The reason for this
+is that a request should be to apply a specific action to a specific
+resource.
 
-Requests take a similar form, but for two differences: firstly, they
-cannot contain wildcards, and secondly, they are for sets of roles
-rather than single roles (although the set could have length zero or
-one). For example, the following request is for an actor with roles 27,
-83, and 99 to delete the user with ID `19` from the organisation with ID
-`42`:
+Taurus matches requests against policies to check whether a request
+should be allowed or denied. The following policy / request pair will
+result in permission being granted:
 
-    {
-      roles: [ 27, 83, 99 ],
-      action: "user:delete",
-      resource: "org/42:user/19"
-    }
+    Policy = (42, project:*, org/27:project/*)
+    Request = (42, project:configure, org/27:project/12)
 
-The resolver isn't precious about how roles are identified, as long as
-it can look them up in the policy database.
+Whereas this pair will result in permission being denied:
 
-## Matching actions and resources
+    Policy = (42, project:*, org/27:project/*)
+    Request = (42, project:create, org/27)
 
-Matchers can be either specific or general. More general matchers will
-match against more specific ones, but not vice versa (`matches` is a
-non-commutative, binary operator).
+This is because the resource requested isn't a subset of that defined in
+the policy.
 
-Actions have two types of matcher, `ASpecific` for things like `read`
-and `write`, and `AWildcard` for wildcards (`*`). Resources have
-three types, which takes into account the fact that a resource can be
-specified by an identifier, or generalised across all identifiers, these
-are `RSpecific` (for a resource type and an identifier), `RAny` (for
-a generalisation across all instances of a given resource type), and
-`RWildcard` (for `*` wildcards). Actions can only be matched against
-actions, and resources against resources.
+_NB: the syntax for policies and requests shown here isn't actual code, just a
+representation for the purposes of documentation._
 
-## Project structure
+## Usage
 
-Definitions for the different matchers can be found in `Matcher`. This
-includes the `Hierarchy a` structure which maps a linear hierarchy of
-matchers which may or may not have children.
+### Setup
 
-In order to convert the specification language to matcher hierarchies,
-there are textual parsers in `Parser`. Parsers convert things like
-`org/42:user/*:*` into:
+Taurus expects to have access to a PostgreSQL server over the network.
+It requires a table to exist called `policies`, and for that table to
+have the following minimal schema:
 
-    Node { matcher=(RSpecific "org" "42")
-         , child=(Node { matcher=(RAny "user")
-                       , child=(Node { matcher=RWildcard,
-                                     , child=EndNode })})}
+    CREATE TABLE policies (
+      role_id int not null,
+      action text not null,
+      resource text not null
+    );
 
-In order to have persistent policies, some sort of storage is required.
-Currently, PostgreSQL is the only supported policy storage system.
-Database definitions for `Policy` can be found in `Source.Policy`.
+### Configuration
+
+TODO
+
+### Interacting over HTTP
+
+#### Making an authorisation request
+
+    GET http://taurus:1337/request/:roleId/:action/:resource
+
+Parameters:
+* `roleId` the ID of the role making the request.
+* `action` the (urlencoded) action string (e.g. `org:CreateProject`).
+* `resource` the (urlencoded) resource string (e.g. `org/42`).
+
+This route can return data either in plaintext or json formats, you just
+need to specify the right mimetype (`text/plain` or `application/json`)
+in the `Accept` header. The response with contain the text "allow" or
+"deny".
+
+Examples:
+
+    curl -X GET -H "Accept: text/plain" \
+      "http://taurus:1337/request/42/org%3ACreateProject/org%2F42"
+    // Response:
+    200 OK
+    Allow
+
+    curl -X GET -H "Accept: application/json" \
+      "http://taurus:1337/request/42/org%3ACreateProject/org%2F42"
+    // Response:
+    200 OK
+    { "response": "allow" }
+
+### As a servless application
+
+ TODO
