@@ -5,7 +5,6 @@ It operates on a table of `policies` and checks incoming authorisation
 requests against known policies in that table.
 
 ## Policies and Requests
-
 Policies are essentially tuples containing the id of the role which this
 policy concerns, the action the role is permitted to perform, and the
 resource on which that action may be performed:
@@ -80,12 +79,19 @@ correct environment variables after spinning up a local instance.
 
 #### Making an authorisation request
 
-    GET http://taurus:1337/request/:roleId/:action/:resource
+    POST http://taurus:1337/request
 
-Parameters:
-* `roleId` the ID of the role making the request.
-* `action` the (urlencoded) action string (e.g. `org:CreateProject`).
-* `resource` the (urlencoded) resource string (e.g. `org/42`).
+Data schema:
+
+    {
+      "roles": int[],
+      "action": string,
+      "resource": string
+    }
+
+* `roles`: a list of the roles whose access you are querying.
+* `action`: the action string (e.g. `org:CreateProject`).
+* `resource`: the resource string (e.g. `org/42`).
 
 This route can return data either in plaintext or json formats, you just
 need to specify the right mimetype (`text/plain` or `application/json`)
@@ -94,18 +100,16 @@ in the `Accept` header. The response with contain the text "allow" or
 
 Examples:
 
-    curl -X GET -H "Accept: text/plain" \
-      "http://taurus:1337/request/42/org%3ACreateProject/org%2F42"
+    curl -X POST -H "Content-Type: application/json" -H "Accept: text/plain" \
+      "http://taurus:1337/request" \
+      -d '{ "roles": [27, 19], "action": "org:CreateProject", "resource": "org/42" }'
     // Response:
     200 OK
     Allow
 
-    curl -X GET -H "Accept: application/json" \
-      "http://taurus:1337/request/42/org%3ACreateProject/org%2F42"
+    curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" \
+      "http://taurus:1337/request" \
+      -d '{ "roles": [27, 19], "action": "org:CreateProject", "resource": "org/42" }'
     // Response:
     200 OK
     { "response": "allow" }
-
-### As a servless application
-
- TODO

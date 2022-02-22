@@ -18,20 +18,15 @@ import Hasql.Session (run)
 import Resolver.Auth (authorised)
 import Resolver.Request
 import Servant.Server.Internal.ServerError (responseServerError)
-import Control.Monad.Trans.Except
-import Control.Monad.Except
 
-type AuthRequestAPI = "request" :> Capture "roleId" RoleID
-                                :> Capture "action" Action
-                                :> Capture "resource" Resource
-                                :> Get '[PlainText, JSON] AuthResponse
+type AuthRequestAPI = "request" :> ReqBody '[JSON] Request
+                                :> Post '[PlainText, JSON] AuthResponse
 
 server :: Pool -> Server AuthRequestAPI
 server cs = authRespond
-  where authRespond :: RoleID -> Action -> Resource -> Handler AuthResponse
-        authRespond i a r = do
-          let req = Request [i] a r
-          queryResult <- liftIO . use cs $ getPoliciesForRoles [i]
+  where authRespond :: Request -> Handler AuthResponse
+        authRespond req = do
+          queryResult <- liftIO . use cs $ getPoliciesForRoles (roles req)
           -- TODO: lift all these Eithers into ExceptT and process monadically
           case queryResult of
             Left _          -> throwError $ err500 { errBody = "unable to query database" }
