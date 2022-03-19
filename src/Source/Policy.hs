@@ -1,4 +1,4 @@
-{-# LANGUAGE TemplateHaskell, QuasiQuotes, RecordWildCards, OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes, RecordWildCards, OverloadedStrings #-}
 
 module Source.Policy (
   getPoliciesForRoles
